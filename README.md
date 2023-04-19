@@ -1,4 +1,8 @@
 # SIGMODContest2023
+## Team Info
+| name | email                        | institution |
+|------|------------------------------|-------------|
+| Jiarui Luo | 11911419@mail.sustech.edu.cn | Southern University of Science and Technology |
 ## Usage
 1. `mkdir build`
 2. `cd build`
