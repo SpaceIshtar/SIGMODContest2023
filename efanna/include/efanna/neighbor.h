@@ -10,15 +10,10 @@
 #include <cstddef>
 #include <vector>
 #include <mutex>
-#include "hash_table7.h"
 #include "util.h"
 #include <unordered_set>
-// #include <cuckoofilter/cuckoofilter_stable.h>
-// #include <cuckoofilter/cuckoofilter.h>
-// #include <cuckoofilter/simd-block-fixed-fpp.h>
-// #include <cuckoofilter/hashing.h>
-//#include "my_heap.h"
 
+// adapted from https://github.com/facebookresearch/faiss
 #define FAISS_PRAGMA_IMPRECISE_LOOP
 #define FAISS_PRAGMA_IMPRECISE_FUNCTION_BEGIN \
     _Pragma("GCC push_options") \
@@ -31,7 +26,6 @@
 
 namespace efanna2e {
 
-    // std::vector<SimdBlockFilterFixed(1024)> filter;
      static std::minstd_rand rnng(1235); 
 
     struct DistId {
@@ -80,39 +74,21 @@ namespace efanna2e {
     struct nhood {
         std::mutex lock;
         std::vector<Neighbor> pool;
-//  heap<Neighbor> pool;
         unsigned M;
         unsigned n_new;
         unsigned n_old;
 
-        // std::size_t insert_cnt = 0;
-        // std::size_t for_cnt = 0;
-        // std::size_t dist_cnt = 0;
-        // std::size_t ex_in_cnt = 0;
-
-        // SimdBlockFilterFixed<::hashing::TwoIndependentMultiplyShift> *filter;
-
-        // cuckoofilter::CuckooFilter<unsigned, 8> *filter = nullptr;
-
         std::vector<unsigned> nn_old;
         std::vector<unsigned> nn_new;
-        // std::vector<unsigned> rnn_old;
-        // std::vector<unsigned> rnn_new;
-
 
         nhood() {
             M = 30;
-            // nn_new.resize(60);
-            // GenRandom(rnng, &nn_new[0], (unsigned) nn_new.size(), 10000000);
-            // nn_new.reserve(60);
         }
 
 
         nhood(unsigned l, unsigned s) {
             M = s;
             pool.reserve(l);
-            // filter = new SimdBlockFilterFixed<::hashing::TwoIndependentMultiplyShift>(8192);
-            // filter = new cuckoofilter::CuckooFilter<unsigned , 8>(1000);
         }
 
         nhood(unsigned l, unsigned s, std::mt19937 &rng, unsigned N) {
@@ -121,8 +97,6 @@ namespace efanna2e {
             GenRandom(rng, &nn_new[0], (unsigned) nn_new.size(), N);
             nn_new.reserve(s * 2);
             pool.reserve(l);
-            // filter = new SimdBlockFilterFixed<::hashing::TwoIndependentMultiplyShift>(8192);
-            // filter = new cuckoofilter::CuckooFilter<unsigned, 8>(1000);
         }
 
         nhood(unsigned l, unsigned s, std::minstd_rand &rng, unsigned N) {
@@ -131,8 +105,6 @@ namespace efanna2e {
             GenRandom(rng, &nn_new[0], (unsigned) nn_new.size(), N);
             nn_new.reserve(s * 2);
             pool.reserve(l);
-            // filter = new SimdBlockFilterFixed<::hashing::TwoIndependentMultiplyShift>(8192);
-            // filter = new cuckoofilter::CuckooFilter<unsigned, 8>(1000);
         }
 
         nhood(const nhood &other) {
@@ -140,7 +112,6 @@ namespace efanna2e {
             std::copy(other.nn_new.begin(), other.nn_new.end(), std::back_inserter(nn_new));
             nn_new.reserve(other.nn_new.capacity());
             pool.reserve(other.pool.capacity());
-            // filter = other.filter;
         }
 
         nhood &operator=(const nhood &other) {
@@ -149,7 +120,6 @@ namespace efanna2e {
                 std::copy(other.nn_new.begin(), other.nn_new.end(), std::back_inserter(nn_new));
                 nn_new.reserve(other.nn_new.capacity());
                 pool.reserve(other.pool.capacity());
-                // filter = other.filter;
             }
 
             return *this;
@@ -172,7 +142,6 @@ namespace efanna2e {
         }
 
         void insert_b(unsigned id, float dist) {
-            // if (dist > pool.front().distance) return;
             for (auto &i: pool) {
                 if (id == i.id) return;
             }

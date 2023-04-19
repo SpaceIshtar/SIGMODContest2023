@@ -16,9 +16,6 @@
 #include "parameters.h"
 #include "neighbor.h"
 #include "index.h"
-#include "hash_set8.hpp"
-//#include <faiss>
-
 
 namespace efanna2e {
 
