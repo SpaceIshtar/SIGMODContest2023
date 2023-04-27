@@ -5,7 +5,7 @@
 | Jiarui Luo | 11911419@mail.sustech.edu.cn | Southern University of Science and Technology |
 | Yanqi Chen | 12011319@mail.sustech.edu.cn | Southern University of Science and Technology |
 | Long Xiang | xiangl3@mail.sustech.edu.cn  | Southern University of Science and Technology |
-| Shimi Luo | 12012939@mail.sustech.edu.cn  | Southern University of Science and Technology |
+| Shimin Luo | 12012939@mail.sustech.edu.cn  | Southern University of Science and Technology |
 | Hongxun Ding | 12011522@mail.sustech.edu.cn | Southern University of Science and Technology |
 
 
